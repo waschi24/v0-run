@@ -34,11 +34,22 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   if (
-    request.nextUrl.pathname.startsWith('/dashboard') &&
-    !user
+    !user &&
+    !request.nextUrl.pathname.startsWith('/auth') &&
+    request.nextUrl.pathname !== '/'
   ) {
     const url = request.nextUrl.clone()
     url.pathname = '/auth/login'
+    return NextResponse.redirect(url)
+  }
+
+  if (
+    user &&
+    (request.nextUrl.pathname.startsWith('/auth') ||
+      request.nextUrl.pathname === '/')
+  ) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/dashboard'
     return NextResponse.redirect(url)
   }
 
