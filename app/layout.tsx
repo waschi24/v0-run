@@ -7,8 +7,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'Run Tracker',
+  description: 'Track your runs, pace, heart rate, and cadence',
   generator: 'v0.app',
   icons: {
     icon: [
