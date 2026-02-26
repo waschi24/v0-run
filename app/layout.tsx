@@ -4,7 +4,7 @@ import './globals.css'
 
 
 export const metadata: Metadata = {
-  title: 'Run Tracker',
+  title: '🏃 Run Tracker',
   description: 'Track your runs, pace, heart rate, and cadence',
   generator: 'v0.app',
   icons: {
