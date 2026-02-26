@@ -46,7 +46,7 @@ export function RunsTable({ runs, onMutate }: RunsTableProps) {
     })
   }
 
-  function formatTime (duration: number) {
+  function formatDuration (duration: number) {
     return `${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, "0")}`
   }
 
@@ -84,8 +84,8 @@ export function RunsTable({ runs, onMutate }: RunsTableProps) {
         </TableHeader>
         <TableBody>
           {runs.map((run) => {
-            const duration = run.duration ? formatTime(run.duration) : "-"
-            const pace = run.duration && run.distance ? formatTime(run.duration / run.distance) : "-"
+            const duration = run.duration ? formatDuration(run.duration) : "-"
+            const pace = run.duration && run.distance ? formatDuration(run.duration / run.distance) : "-"
             return (
               <TableRow key={run.id}>
                 <TableCell>

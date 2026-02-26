@@ -45,6 +45,7 @@ export function RunDialog({run, onSuccess, trigger}: RunDialogProps) {
     const [avgSpm, setAvgSpm] = useState(run?.avg_spm?.toString() ?? "")
     const [notes, setNotes] = useState(run?.notes ?? "")
     const [duration, setDuration] = useState(run?.duration?.toString() ?? "")
+    const [formattedDuration, setFormattedDuration] = useState(run?.duration?.toString() ?? "")
     const [distance, setDistance] = useState(run?.distance?.toString() ?? "")
 
     const resetForm = () => {
@@ -64,6 +65,10 @@ export function RunDialog({run, onSuccess, trigger}: RunDialogProps) {
     function unformatDuration(formattedDuration: string): number {
         const [minutes, seconds] = formattedDuration.split(":").map(Number)
         return minutes * 60 + seconds
+    }
+
+    function formatDuration (duration: number) {
+        return `${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, "0")}`
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -119,6 +124,7 @@ export function RunDialog({run, onSuccess, trigger}: RunDialogProps) {
                     setMaxBpm(run.max_bpm?.toString() ?? "")
                     setDistance(run.distance?.toString() ?? "")
                     setDuration(run.duration?.toString() ?? "")
+                    setFormattedDuration(run.duration ? formatDuration(run.duration) : "")
                     setAvgSpm(run.avg_spm?.toString() ?? "")
                     setNotes(run.notes ?? "")
                 }
@@ -183,12 +189,13 @@ export function RunDialog({run, onSuccess, trigger}: RunDialogProps) {
                                     type="text"
                                     pattern="^\d{1,2}:\d{2}$"
                                     placeholder="31:43"
-                                    value={duration}
+                                    value={formattedDuration}
                                     onChange={(e) => {
                                         const value = e.target.value
                                         if (value === "" || /^\d{1,2}:\d{2}$/.test(value)) {
                                             setDuration(value === "" ? "" : unformatDuration(value).toString())
                                         }
+                                        setFormattedDuration(value)
                                     }}
                                     required
                                 />
