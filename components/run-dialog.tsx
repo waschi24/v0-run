@@ -86,7 +86,7 @@ export function RunDialog({run, onSuccess, trigger}: RunDialogProps) {
             avg_spm: avgSpm ? parseInt(avgSpm) : null,
             notes: notes || null,
             duration: duration ? parseInt(duration) : null,
-            distance: distance ? parseFloat(avgBpm) : null,
+            distance: distance ? parseFloat(distance) : null,
         }
 
         try {
