@@ -5,7 +5,8 @@ export interface Run {
   date: string
   avg_bpm: number | null
   max_bpm: number | null
-  avg_pace: string | null
+  duration: number | null
+  distance: number | null
   avg_spm: number | null
   notes: string | null
   created_at: string

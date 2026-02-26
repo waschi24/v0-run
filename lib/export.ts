@@ -2,9 +2,9 @@ import type { Run } from "@/lib/types"
 
 export function exportToMarkdown(runs: Run[]): string {
   const header =
-    "| Type | Date | Avg BPM | Max BPM | Avg Pace | Avg SPM | Notes |"
+    "| Type | Date | Avg BPM | Max BPM | Distance | Duration | Avg Pace | Avg SPM | Notes |"
   const separator =
-    "| --- | --- | --- | --- | --- | --- | --- |"
+    "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"
 
   const rows = runs.map((run) => {
     const date = new Date(run.date + "T00:00:00").toLocaleDateString("en-US", {
@@ -12,7 +12,16 @@ export function exportToMarkdown(runs: Run[]): string {
       month: "short",
       day: "numeric",
     })
-    return `| ${run.type} | ${date} | ${run.avg_bpm ?? "-"} | ${run.max_bpm ?? "-"} | ${run.avg_pace ?? "-"} | ${run.avg_spm ?? "-"} | ${(run.notes ?? "-").replace(/\|/g, "\\|").replace(/\n/g, " ")} |`
+    let formattedTime = "-"
+    let pace = "-"
+    if (run.duration) {
+      formattedTime = `${Math.floor(run.duration / 60)}:${(run.duration % 60).toString().padStart(2, "0")}`
+      if (run.distance) {
+        let secondsPerKm =  run.duration / run.distance
+        pace = `${Math.floor(secondsPerKm / 60)}:${(secondsPerKm % 60).toString().padStart(2, "0")}`
+      }
+    }
+    return `| ${run.type} | ${date} | ${run.avg_bpm ?? "-"} | ${run.max_bpm ?? "-"} | ${run.distance ? run.distance + "km" : "-"} | ${formattedTime} | ${pace} | ${run.avg_spm ?? "-"} | ${(run.notes ?? "-").replace(/\|/g, "\\|").replace(/\n/g, " ")} |`
   })
 
   return [header, separator, ...rows].join("\n")

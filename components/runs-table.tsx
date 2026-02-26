@@ -46,6 +46,10 @@ export function RunsTable({ runs, onMutate }: RunsTableProps) {
     })
   }
 
+  function formatTime (duration: number) {
+    return `${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, "0")}`
+  }
+
   if (runs.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-16">
@@ -68,7 +72,9 @@ export function RunsTable({ runs, onMutate }: RunsTableProps) {
             <TableHead className="font-semibold text-foreground">Date</TableHead>
             <TableHead className="font-semibold text-foreground">Avg BPM</TableHead>
             <TableHead className="font-semibold text-foreground">Max BPM</TableHead>
-            <TableHead className="font-semibold text-foreground">Avg Pace</TableHead>
+            <TableHead className="font-semibold text-foreground">Dauer</TableHead>
+            <TableHead className="font-semibold text-foreground">Distanz (km)</TableHead>
+            <TableHead className="font-semibold text-foreground">Pace (min/km)</TableHead>
             <TableHead className="font-semibold text-foreground">Avg SPM</TableHead>
             <TableHead className="font-semibold text-foreground">Notes</TableHead>
             <TableHead className="w-[100px] font-semibold text-foreground">
@@ -77,69 +83,63 @@ export function RunsTable({ runs, onMutate }: RunsTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {runs.map((run) => (
-            <TableRow key={run.id}>
-              <TableCell>
-                <span className="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
-                  {run.type}
-                </span>
-              </TableCell>
-              <TableCell className="whitespace-nowrap">
-                {formatDate(run.date)}
-              </TableCell>
-              <TableCell>{run.avg_bpm ?? "-"}</TableCell>
-              <TableCell>{run.max_bpm ?? "-"}</TableCell>
-              <TableCell>{run.avg_pace ?? "-"}</TableCell>
-              <TableCell>{run.avg_spm ?? "-"}</TableCell>
-              <TableCell className="max-w-[200px] truncate">
-                {run.notes ?? "-"}
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-1">
-                  <RunDialog
-                    run={run}
-                    onSuccess={onMutate}
-                    trigger={
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <Pencil className="h-4 w-4" />
-                        <span className="sr-only">Edit run</span>
-                      </Button>
-                    }
-                  />
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-destructive hover:text-destructive"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        <span className="sr-only">Delete run</span>
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Delete this run?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This action cannot be undone. This will permanently
-                          delete this run entry.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDelete(run.id)}
-                          className="bg-destructive text-destructive-foreground text-white hover:bg-destructive/90"
-                        >
-                          Delete
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
+          {runs.map((run) => {
+            const duration = run.duration ? formatTime(run.duration) : "-"
+            const pace = run.duration && run.distance ? formatTime(run.duration / run.distance) : "-"
+            return (
+              <TableRow key={run.id}>
+                <TableCell>
+                  <span className="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                    {run.type}
+                  </span>
+                </TableCell>
+                <TableCell className="whitespace-nowrap">{formatDate(run.date)}</TableCell>
+                <TableCell>{run.avg_bpm ?? "-"}</TableCell>
+                <TableCell>{run.max_bpm ?? "-"}</TableCell>
+                <TableCell>{duration}</TableCell>
+                <TableCell>{run.distance ?? "-"}</TableCell>
+                <TableCell>{pace}</TableCell>
+                <TableCell>{run.avg_spm ?? "-"}</TableCell>
+                <TableCell className="max-w-[200px] truncate">{run.notes ?? "-"}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <RunDialog
+                      run={run}
+                      onSuccess={onMutate}
+                      trigger={
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Pencil className="h-4 w-4" />
+                          <span className="sr-only">Edit</span>
+                        </Button>
+                      }
+                    />
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Trash2 className="h-4 w-4" />
+                          <span className="sr-only">Delete</span>
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete Run</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to delete this run?
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => handleDelete(run.id)}>
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )
+          })}
         </TableBody>
       </Table>
     </div>
