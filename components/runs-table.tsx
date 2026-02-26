@@ -129,7 +129,7 @@ export function RunsTable({ runs, onMutate }: RunsTableProps) {
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
                           onClick={() => handleDelete(run.id)}
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          className="bg-destructive text-destructive-foreground text-white hover:bg-destructive/90"
                         >
                           Delete
                         </AlertDialogAction>
