@@ -181,10 +181,15 @@ export function RunDialog({run, onSuccess, trigger}: RunDialogProps) {
                                 <Input
                                     id="duration"
                                     type="text"
-                                    pattern="^\\d{1,2}:\\d{2}$"
+                                    pattern="^\d{1,2}:\d{2}$"
                                     placeholder="31:43"
                                     value={duration}
-                                    onChange={(e) => setDuration(unformatDuration(e.target.value).toString())}
+                                    onChange={(e) => {
+                                        const value = e.target.value
+                                        if (value === "" || /^\d{1,2}:\d{2}$/.test(value)) {
+                                            setDuration(value === "" ? "" : unformatDuration(value).toString())
+                                        }
+                                    }}
                                     required
                                 />
                             </div>
