@@ -220,6 +220,16 @@ export function RunDialog({run, onSuccess, trigger}: RunDialogProps) {
                                     onChange={(e) => setMaxBpm(e.target.value)}
                                 />
                             </div>
+                            <div className="flex flex-col gap-2">
+                                <Label htmlFor="avg-spm">Avg SPM</Label>
+                                <Input
+                                    id="avg-spm"
+                                    type="number"
+                                    placeholder="160"
+                                    value={avgSpm}
+                                    onChange={(e) => setAvgSpm(e.target.value)}
+                                />
+                            </div>
                         </div>
                         <div className="flex flex-col gap-2">
                             <Label htmlFor="notes">Notes</Label>
