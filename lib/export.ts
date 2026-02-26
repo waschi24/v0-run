@@ -15,10 +15,10 @@ export function exportToMarkdown(runs: Run[]): string {
     let formattedTime = "-"
     let pace = "-"
     if (run.duration) {
-      formattedTime = `${Math.floor(run.duration / 60)}:${(run.duration % 60).toString().padStart(2, "0")}`
+      formattedTime = `${Math.floor(run.duration / 60)}:${Math.round(run.duration % 60).toString().padStart(2, "0")}`
       if (run.distance) {
         let secondsPerKm =  run.duration / run.distance
-        pace = `${Math.floor(secondsPerKm / 60)}:${(secondsPerKm % 60).toString().padStart(2, "0")}`
+        pace = `${Math.floor(secondsPerKm / 60)}:${Math.round(secondsPerKm % 60).toString().padStart(2, "0")}`
       }
     }
     return `| ${run.type} | ${date} | ${run.avg_bpm ?? "-"} | ${run.max_bpm ?? "-"} | ${run.distance ? run.distance + "km" : "-"} | ${formattedTime} | ${pace} | ${run.avg_spm ?? "-"} | ${(run.notes ?? "-").replace(/\|/g, "\\|").replace(/\n/g, " ")} |`

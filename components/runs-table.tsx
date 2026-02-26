@@ -47,7 +47,7 @@ export function RunsTable({ runs, onMutate }: RunsTableProps) {
   }
 
   function formatDuration (duration: number) {
-    return `${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, "0")}`
+    return `${Math.floor(duration / 60)}:${Math.round(duration % 60).toString().padStart(2, "0")}`
   }
 
   if (runs.length === 0) {
