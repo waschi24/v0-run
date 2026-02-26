@@ -27,11 +27,10 @@ import { Pencil, Trash2 } from "lucide-react"
 
 interface RunsTableProps {
   runs: Run[]
-  userId: string
   onMutate: () => void
 }
 
-export function RunsTable({ runs, userId, onMutate }: RunsTableProps) {
+export function RunsTable({ runs, onMutate }: RunsTableProps) {
   const handleDelete = async (id: string) => {
     const supabase = createClient()
     await supabase.from("runs").delete().eq("id", id)
@@ -99,7 +98,6 @@ export function RunsTable({ runs, userId, onMutate }: RunsTableProps) {
                 <div className="flex items-center gap-1">
                   <RunDialog
                     run={run}
-                    userId={userId}
                     onSuccess={onMutate}
                     trigger={
                       <Button variant="ghost" size="icon" className="h-8 w-8">

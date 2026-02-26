@@ -1,6 +1,6 @@
 export interface Run {
   id: string
-  user_id: string
+  user_id?: string
   type: string
   date: string
   avg_bpm: number | null

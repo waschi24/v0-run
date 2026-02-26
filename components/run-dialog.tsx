@@ -27,12 +27,11 @@ import { Textarea } from "@/components/ui/textarea"
 
 interface RunDialogProps {
   run?: Run
-  userId: string
   onSuccess: () => void
   trigger: React.ReactNode
 }
 
-export function RunDialog({ run, userId, onSuccess, trigger }: RunDialogProps) {
+export function RunDialog({ run, onSuccess, trigger }: RunDialogProps) {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -68,7 +67,6 @@ export function RunDialog({ run, userId, onSuccess, trigger }: RunDialogProps) {
     const supabase = createClient()
 
     const data = {
-      user_id: userId,
       type,
       date,
       avg_bpm: avgBpm ? parseInt(avgBpm) : null,

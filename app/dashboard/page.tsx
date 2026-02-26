@@ -8,24 +8,12 @@ import { RunDialog } from "@/components/run-dialog"
 import { RunsTable } from "@/components/runs-table"
 import { exportToMarkdown, downloadMarkdown } from "@/lib/export"
 import { Button } from "@/components/ui/button"
-import { Plus, Download, LogOut } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { Plus, Download } from "lucide-react"
 
-function useUser() {
-  const supabase = createClient()
-  const { data, error } = useSWR("user", async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    return user
-  })
-  return { user: data ?? null, error }
-}
-
-function useRuns(userId: string | undefined) {
+function useRuns() {
   const supabase = createClient()
   const { data, error, mutate } = useSWR(
-    userId ? `runs-${userId}` : null,
+    "runs",
     async () => {
       const { data, error } = await supabase
         .from("runs")
@@ -39,9 +27,7 @@ function useRuns(userId: string | undefined) {
 }
 
 export default function DashboardPage() {
-  const router = useRouter()
-  const { user } = useUser()
-  const { runs, mutate } = useRuns(user?.id)
+  const { runs, mutate } = useRuns()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -54,12 +40,6 @@ export default function DashboardPage() {
     const today = new Date().toISOString().split("T")[0]
     downloadMarkdown(md, `runs-${today}.md`)
   }, [runs])
-
-  const handleSignOut = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push("/auth/login")
-  }
 
   if (!mounted) return null
 
@@ -88,22 +68,6 @@ export default function DashboardPage() {
               Run Tracker
             </h1>
           </div>
-          <div className="flex items-center gap-2">
-            {user && (
-              <span className="hidden text-sm text-muted-foreground sm:block">
-                {user.email}
-              </span>
-            )}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleSignOut}
-              className="h-9 w-9"
-            >
-              <LogOut className="h-4 w-4" />
-              <span className="sr-only">Sign out</span>
-            </Button>
-          </div>
         </div>
       </header>
 
@@ -127,28 +91,19 @@ export default function DashboardPage() {
               <Download className="h-4 w-4" />
               Export Markdown
             </Button>
-            {user && (
-              <RunDialog
-                userId={user.id}
-                onSuccess={() => mutate()}
-                trigger={
-                  <Button className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    Log Run
-                  </Button>
-                }
-              />
-            )}
+            <RunDialog
+              onSuccess={() => mutate()}
+              trigger={
+                <Button className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Log Run
+                </Button>
+              }
+            />
           </div>
         </div>
 
-        {user && (
-          <RunsTable
-            runs={runs}
-            userId={user.id}
-            onMutate={() => mutate()}
-          />
-        )}
+        <RunsTable runs={runs} onMutate={() => mutate()} />
       </main>
     </div>
   )
