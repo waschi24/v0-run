@@ -117,7 +117,22 @@ export function Progression({runs}: ProgressionProps) {
             <h1 className="text-2xl font-bold">Progression Diagrams</h1>
             <p className="text-lg text-gray-600 mt-4">This scatter diagram shows your progression over time. </p>
             <Scatter options={scatterOptions} data={scatterChartData}/>
-            <p className="text-lg text-gray-600 mt-4">This scatter diagram shows your progression over time. </p>
+            <p className="text-lg text-gray-600 mt-4">This line diagram shows your pace over time.</p>
+            <select
+                className="mb-4 px-4 py-2 border border-gray-400 rounded-md cursor-pointer flex flex-row"
+                defaultValue={runType}
+                onChange={(e) => runType = e.target.value as RunType}
+            >
+                <option value={RunType.EASY_RUN}>Easy Run</option>
+                <option value={RunType.LONG_RUN}>Long Run</option>
+                <option value={RunType.TEMPO_RUN}>Tempo Run</option>
+                <option value={RunType.INTERVAL}>Interval Run</option>
+                <option value={RunType.FARTLEK}>Fartlek Run</option>
+                <option value={RunType.RECOVERY}>Recovery Run</option>
+                <option value={RunType.RACE}>Race</option>
+                <option value={RunType.TRAIL}>Trail Run</option>
+                <option value={RunType.TREADMILL}>Treadmill Run</option>
+            </select>
             <Line options={lineOptions} data={lineChartData}/>
         </div>
     );
