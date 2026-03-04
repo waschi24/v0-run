@@ -18,14 +18,6 @@ interface ProgressionProps {
 export function Progression({runs}: ProgressionProps) {
     ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 
-    const options = {
-        scales: {
-            y: {
-                beginAtZero: true,
-            },
-        },
-    };
-
     let data: { x: number, y: number }[] = []
 
     for (const run of runs) {
@@ -48,7 +40,7 @@ export function Progression({runs}: ProgressionProps) {
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
             <h1 className="text-4xl font-bold mb-4">Progression Page</h1>
             <p className="text-lg text-gray-600">This page will show your progression over time.</p>
-            <Scatter options={options} data={dataSet} />
+            <Scatter data={dataSet} />
         </div>
     );
 }
