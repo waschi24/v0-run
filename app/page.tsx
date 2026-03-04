@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client"
 import type { Run } from "@/lib/types"
 import { RunDialog } from "@/components/run-dialog"
 import { RunsTable } from "@/components/runs-table"
-import { exportToMarkdown, downloadMarkdown } from "@/lib/export"
+import { exportToMarkdown, downloadMarkdown, exportToCSV, downloadCSV } from "@/lib/export"
 import { Button } from "@/components/ui/button"
 import { Plus, Download } from "lucide-react"
 
@@ -34,11 +34,18 @@ export default function DashboardPage() {
     setMounted(true)
   }, [])
 
-  const handleExport = useCallback(() => {
+  const handleMdExport = useCallback(() => {
     if (runs.length === 0) return
     const md = exportToMarkdown(runs)
     const today = new Date().toISOString().split("T")[0]
     downloadMarkdown(md, `runs-${today}.md`)
+  }, [runs])
+
+  const handleCsvExport = useCallback(() => {
+    if (runs.length === 0) return
+    const csv = exportToCSV(runs)
+    const today = new Date().toISOString().split("T")[0]
+    downloadCSV(csv, `runs-${today}.csv`)
   }, [runs])
 
   if (!mounted) return null
@@ -84,12 +91,21 @@ export default function DashboardPage() {
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
-              onClick={handleExport}
+              onClick={handleMdExport}
               disabled={runs.length === 0}
               className="gap-2"
             >
               <Download className="h-4 w-4" />
               Export Markdown
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleCsvExport}
+              disabled={runs.length === 0}
+              className="gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Export CSV
             </Button>
             <RunDialog
               onSuccess={() => mutate()}
