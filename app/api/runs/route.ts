@@ -1,12 +1,19 @@
+"use server";
+
 import {NextResponse} from "next/server";
-import {useRuns} from "@/app/page";
+import {createClient} from "@/lib/supabase/server";
 
 export async function GET() {
-    const {runs, error} = useRuns()
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+        .from("runs")
+        .select("*")
+        .order("date", { ascending: false });
 
     if (error) {
-        return NextResponse.json({ error: error.message }, { status:500 })
+        return NextResponse.json({ error: error.message }, { status:500 });
     }
 
-    return NextResponse.json(runs, { status:200 })
+    return NextResponse.json(data ?? [], { status:200 });
 }
