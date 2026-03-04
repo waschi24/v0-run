@@ -71,7 +71,11 @@ export function Progression({runs}: ProgressionProps) {
     }
 
     const lineOptions: ChartOptions<"line"> = {
-        responsive: true,
+        scales: {
+            y:{
+                reverse: true,
+            }
+        }
     };
 
     let runType: RunType = RunType.EASY_RUN;
