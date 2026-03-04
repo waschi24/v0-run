@@ -7,6 +7,7 @@ import {
     LineElement,
     Tooltip,
     Legend,
+    ChartOptions
 } from 'chart.js';
 import {Scatter} from "react-chartjs-2";
 import {Run} from "@/lib/types";
@@ -17,6 +18,17 @@ interface ProgressionProps {
 
 export function Progression({runs}: ProgressionProps) {
     ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
+
+    const options: ChartOptions<"scatter"> = {
+        scales: {
+            x: {
+                reverse: true
+            },
+            y: {
+                reverse: true
+            }
+        }
+    }
 
     let data: { x: number, y: number }[] = []
 
@@ -35,12 +47,11 @@ export function Progression({runs}: ProgressionProps) {
         ]
     }
 
-
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
             <h1 className="text-4xl font-bold mb-4">Progression Page</h1>
             <p className="text-lg text-gray-600">This page will show your progression over time.</p>
-            <Scatter data={dataSet} />
+            <Scatter options={options} data={dataSet} />
         </div>
     );
 }
