@@ -132,7 +132,7 @@ export function Progression({runs}: ProgressionProps) {
                 onChange={(e) => setRunType(e.target.value as RunType)}
             >
                 {usedRunTypes.map((type) => (
-                    <option key={type} value={type}>{type.toString()}</option>
+                    <option key={type} value={type}>{type}</option>
                 ))}
             </select>
             <Line key={runType} options={lineOptions} data={lineChartData}/>
