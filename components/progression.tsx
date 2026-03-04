@@ -2,12 +2,14 @@
 
 import {
     Chart as ChartJS,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Tooltip,
+    ChartData,
+    ChartOptions,
     Legend,
-    ChartOptions
+    LinearScale,
+    LineElement,
+    PointElement,
+    Tooltip,
+    TooltipItem
 } from 'chart.js';
 import {Scatter} from "react-chartjs-2";
 import {Run} from "@/lib/types";
@@ -37,12 +39,24 @@ export function Progression({runs}: ProgressionProps) {
         data.push({x: run.avg_bpm, y: Math.round(run.duration / run.distance / 60 * 100) / 100})
     }
 
-    const dataSet = {
+    const chartData: ChartData<"scatter"> = {
         datasets: [
             {
                 label: 'A dataset',
                 data: data,
-                backgroundColor: 'rgb(0, 140, 108)'
+                backgroundColor: 'rgb(0, 140, 108)',
+                tooltip: {
+                    callbacks: {
+                        label(tooltipItem: TooltipItem<"scatter">): string | string[] | void {
+                            const run = runs[tooltipItem.dataIndex]
+                            return `${run.type} on ${new Date(run.date + "T00:00:00").toLocaleDateString("en-US", {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                            })}: ${Math.round(run.duration! / run.distance! / 60 * 100) / 100} min/km`
+                        }
+                    }
+                },
             }
         ]
     }
@@ -51,7 +65,7 @@ export function Progression({runs}: ProgressionProps) {
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
             <h1 className="text-4xl font-bold mb-4">Progression Page</h1>
             <p className="text-lg text-gray-600">This page will show your progression over time.</p>
-            <Scatter options={options} data={dataSet} />
+            <Scatter options={options} data={chartData}/>
         </div>
     );
 }
