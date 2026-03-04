@@ -83,7 +83,9 @@ export function Progression({runs}: ProgressionProps) {
         }
     };
 
-    const [runType, setRunType] = useState(RunType.EASY_RUN)
+    const usedRunTypes = Array.from(new Set(runs.map(run => run.type))) ? Array.from(new Set(runs.map(run => run.type))) : [RunType.EASY_RUN]
+
+    const [runType, setRunType] = useState(usedRunTypes[0]);
 
     const { lineRuns, labels, lineData, lineChartData } = useMemo(() => {
         const filteredRuns = runs.filter(run => run.duration !== null && run.distance !== null && run.type === runType.toString()).reverse()
@@ -129,15 +131,9 @@ export function Progression({runs}: ProgressionProps) {
                 defaultValue={runType}
                 onChange={(e) => setRunType(e.target.value as RunType)}
             >
-                <option value={RunType.EASY_RUN}>Easy Run</option>
-                <option value={RunType.LONG_RUN}>Long Run</option>
-                <option value={RunType.TEMPO_RUN}>Tempo Run</option>
-                <option value={RunType.INTERVAL}>Interval Run</option>
-                <option value={RunType.FARTLEK}>Fartlek Run</option>
-                <option value={RunType.RECOVERY}>Recovery Run</option>
-                <option value={RunType.RACE}>Race</option>
-                <option value={RunType.TRAIL}>Trail Run</option>
-                <option value={RunType.TREADMILL}>Treadmill Run</option>
+                {usedRunTypes.map((type) => (
+                    <option key={type} value={type}>{type.toString()}</option>
+                ))}
             </select>
             <Line key={runType} options={lineOptions} data={lineChartData}/>
         </div>
