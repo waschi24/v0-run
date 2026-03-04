@@ -22,7 +22,7 @@ export function Progression({runs}: ProgressionProps) {
 
     for (const run of runs) {
         if (!run.avg_bpm || !run.duration || !run.distance) return;
-        data.push({x: run.avg_bpm, y: run.duration / run.distance})
+        data.push({x: run.avg_bpm, y: Math.round(run.duration / run.distance / 60 * 100) / 100})
     }
 
     const dataSet = {
