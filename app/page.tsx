@@ -9,6 +9,7 @@ import { RunsTable } from "@/components/runs-table"
 import { exportToMarkdown, downloadMarkdown, exportToCSV, downloadCSV } from "@/lib/export"
 import { Button } from "@/components/ui/button"
 import { Plus, Download } from "lucide-react"
+import {Progression} from "@/components/progression";
 
 function useRuns() {
   const supabase = createClient()
@@ -120,6 +121,8 @@ export default function DashboardPage() {
         </div>
 
         <RunsTable runs={runs} onMutate={() => mutate()} />
+
+        <Progression runs={runs} />
       </main>
     </div>
   )
