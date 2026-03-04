@@ -25,3 +25,15 @@ export const RUN_TYPES = [
   "Trail",
   "Treadmill",
 ] as const
+
+export enum RunType {
+  EASY_RUN = "Easy Run",
+  LONG_RUN = "Long Run",
+  TEMPO_RUN = "Tempo Run",
+  INTERVAL = "Interval",
+  FARTLEK = "Fartlek",
+  RECOVERY = "Recovery",
+  RACE = "Race",
+  TRAIL = "Trail",
+  TREADMILL = "Treadmill",
+}
