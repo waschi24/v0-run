@@ -83,7 +83,7 @@ export function Progression({runs}: ProgressionProps) {
     };
 
     let runType: RunType = RunType.EASY_RUN;
-    const lineRuns = runs.filter(run => run.duration !== null && run.distance !== null && run.type === runType.toString())
+    const lineRuns = runs.filter(run => run.duration !== null && run.distance !== null && run.type === runType.toString()).reverse()
     const labels = lineRuns.map(run => formatDate(run.date))
 
     let lineData: number[] = []
@@ -114,9 +114,10 @@ export function Progression({runs}: ProgressionProps) {
 
     return (
         <div className="flex flex-col items-center justify-center pt-4">
-            <h1 className="text-2xl font-bold mb-4">Progression Diagrams</h1>
-            <p className="text-lg text-gray-600">This diagrams will show your progression over time.</p>
+            <h1 className="text-2xl font-bold">Progression Diagrams</h1>
+            <p className="text-lg text-gray-600 mt-4">This scatter diagram shows your progression over time. </p>
             <Scatter options={scatterOptions} data={scatterChartData}/>
+            <p className="text-lg text-gray-600 mt-4">This scatter diagram shows your progression over time. </p>
             <Line options={lineOptions} data={lineChartData}/>
         </div>
     );
