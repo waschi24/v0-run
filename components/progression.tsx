@@ -38,10 +38,12 @@ export function Progression({runs}: ProgressionProps) {
     const scatterOptions: ChartOptions<"scatter"> = {
         scales: {
             x: {
-                reverse: true
+                reverse: true,
+                labels: ["Heart Rate (BPM)"]
             },
             y: {
-                reverse: true
+                reverse: true,
+                labels: ["Pace (min/km)"]
             }
         }
     }
@@ -75,6 +77,10 @@ export function Progression({runs}: ProgressionProps) {
         scales: {
             y:{
                 reverse: true,
+                labels: ["Pace (min/km)"]
+            },
+            x: {
+                labels: ["Date"]
             }
         }
     };
@@ -97,6 +103,14 @@ export function Progression({runs}: ProgressionProps) {
                 label: 'Run',
                 data: lineData,
                 backgroundColor: 'rgb(0, 140, 108)',
+                tooltip: {
+                    callbacks: {
+                        label(tooltipItem: TooltipItem<"line">): string | string[] | void {
+                            const run = runs[tooltipItem.dataIndex]
+                            return `${run.type} on ${formatDate(run.date)}: ${formatDuration(run.duration! / run.distance!)} min/km`
+                        }
+                    }
+                },
             }
         ],
     };
