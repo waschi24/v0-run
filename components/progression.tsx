@@ -14,6 +14,7 @@ import {
 } from 'chart.js';
 import {Line, Scatter} from "react-chartjs-2";
 import {Run, RunType} from "@/lib/types";
+import {useState, useMemo} from "react";
 
 interface ProgressionProps {
     runs: Run[]
@@ -82,35 +83,40 @@ export function Progression({runs}: ProgressionProps) {
         }
     };
 
-    let runType: RunType = RunType.EASY_RUN;
-    const lineRuns = runs.filter(run => run.duration !== null && run.distance !== null && run.type === runType.toString()).reverse()
-    const labels = lineRuns.map(run => formatDate(run.date))
+    const [runType, setRunType] = useState(RunType.EASY_RUN)
 
-    let lineData: number[] = []
+    const { lineRuns, labels, lineData, lineChartData } = useMemo(() => {
+        const filteredRuns = runs.filter(run => run.duration !== null && run.distance !== null && run.type === runType.toString()).reverse()
+        const runLabels = filteredRuns.map(run => formatDate(run.date))
 
-    for (const run of lineRuns) {
-        if (!run.avg_bpm || !run.duration || !run.distance) return;
-        lineData.push(Math.round(run.duration / run.distance / 60 * 100) / 100)
-    }
+        let data: number[] = []
 
-    const lineChartData: ChartData<"line"> = {
-        labels,
-        datasets: [
-            {
-                label: 'Run',
-                data: lineData,
-                backgroundColor: 'rgb(0, 140, 108)',
-                tooltip: {
-                    callbacks: {
-                        label(tooltipItem: TooltipItem<"line">): string | string[] | void {
-                            const run = runs[tooltipItem.dataIndex]
-                            return `${run.type} on ${formatDate(run.date)}: ${formatDuration(run.duration! / run.distance!)} min/km`
+        for (const run of filteredRuns) {
+            if (!run.avg_bpm || !run.duration || !run.distance) return { lineRuns: [], labels: [], lineData: [], lineChartData: { labels: [], datasets: [] } };
+            data.push(Math.round(run.duration / run.distance / 60 * 100) / 100)
+        }
+
+        const chartData: ChartData<"line"> = {
+            labels: runLabels,
+            datasets: [
+                {
+                    label: 'Run',
+                    data: data,
+                    backgroundColor: 'rgb(0, 140, 108)',
+                    tooltip: {
+                        callbacks: {
+                            label(tooltipItem: TooltipItem<"line">): string | string[] | void {
+                                const run = runs[tooltipItem.dataIndex]
+                                return `${run.type} on ${formatDate(run.date)}: ${formatDuration(run.duration! / run.distance!)} min/km`
+                            }
                         }
-                    }
-                },
-            }
-        ],
-    };
+                    },
+                }
+            ],
+        };
+
+        return { lineRuns: filteredRuns, labels: runLabels, lineData: data, lineChartData: chartData };
+    }, [runType, runs]);
 
     return (
         <div className="flex flex-col items-center justify-center pt-4">
@@ -121,7 +127,7 @@ export function Progression({runs}: ProgressionProps) {
             <select
                 className="mb-4 px-4 py-2 border border-gray-400 rounded-md cursor-pointer flex flex-row"
                 defaultValue={runType}
-                onChange={(e) => runType = e.target.value as RunType}
+                onChange={(e) => setRunType(e.target.value as RunType)}
             >
                 <option value={RunType.EASY_RUN}>Easy Run</option>
                 <option value={RunType.LONG_RUN}>Long Run</option>
@@ -133,7 +139,7 @@ export function Progression({runs}: ProgressionProps) {
                 <option value={RunType.TRAIL}>Trail Run</option>
                 <option value={RunType.TREADMILL}>Treadmill Run</option>
             </select>
-            <Line options={lineOptions} data={lineChartData}/>
+            <Line key={runType} options={lineOptions} data={lineChartData}/>
         </div>
     );
 }
