@@ -79,9 +79,6 @@ export function Progression({runs}: ProgressionProps) {
                 reverse: true,
                 labels: ["Pace (min/km)"]
             },
-            x: {
-                labels: ["Date"]
-            }
         }
     };
 
