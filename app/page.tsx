@@ -10,7 +10,7 @@ import { exportToMarkdown, downloadMarkdown } from "@/lib/export"
 import { Button } from "@/components/ui/button"
 import { Plus, Download } from "lucide-react"
 
-function useRuns() {
+export function useRuns() {
   const supabase = createClient()
   const { data, error, mutate } = useSWR(
     "runs",
