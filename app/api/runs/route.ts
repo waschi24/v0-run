@@ -1,5 +1,3 @@
-"use client"
-
 import { createClient } from "@/lib/supabase/server"
 import {NextResponse} from "next/server";
 import useSWR from "swr";
