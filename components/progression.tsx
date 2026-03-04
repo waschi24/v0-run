@@ -1,6 +1,7 @@
 "use client"
 
 import {
+    CategoryScale,
     Chart as ChartJS,
     ChartData,
     ChartOptions,
@@ -19,7 +20,7 @@ interface ProgressionProps {
 }
 
 export function Progression({runs}: ProgressionProps) {
-    ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
+    ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
     function formatDate (dateStr: string) {
         const d = new Date(dateStr + "T00:00:00")
