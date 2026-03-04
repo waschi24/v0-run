@@ -1,3 +1,5 @@
+"use client";
+
 import {
     Chart as ChartJS,
     LinearScale,
@@ -6,7 +8,7 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
-import {Scatter} from 'react-chartjs-2';
+import {Scatter} from "react-chartjs-2";
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 
@@ -435,7 +437,7 @@ export default function ProgressionPage() {
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
             <h1 className="text-4xl font-bold mb-4">Progression Page</h1>
             <p className="text-lg text-gray-600">This page will show your progression over time.</p>
-            <Scatter options={options} data={data}/>;
+            <Scatter options={options} data={data} />
         </div>
     );
 }
