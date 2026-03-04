@@ -15,6 +15,8 @@ import {
 import {Line, Scatter} from "react-chartjs-2";
 import {Run, RunType} from "@/lib/types";
 import {useState, useMemo, useEffect} from "react";
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
+import {Label} from "@/components/ui/label";
 
 interface ProgressionProps {
     runs: Run[]
@@ -132,6 +134,14 @@ export function Progression({runs}: ProgressionProps) {
             <p className="text-lg text-gray-600 mt-4">This scatter diagram shows your progression over time. </p>
             <Scatter options={scatterOptions} data={scatterChartData}/>
             <p className="text-lg text-gray-600 mt-4">This line diagram shows your pace over time.</p>
+            <RadioGroup defaultValue={runType} className="mb-4 flex flex-row gap-4">
+                {usedRunTypes.map((type) => (
+                    <div className="flex items-center space-x-2">
+                        <RadioGroupItem value={type} id={type} />
+                        <Label htmlFor={type}>{type}</Label>
+                    </div>
+                ))}
+            </RadioGroup>
             <select
                 className="mb-4 px-4 py-2 border border-gray-400 rounded-md cursor-pointer flex flex-row"
                 defaultValue={runType}
