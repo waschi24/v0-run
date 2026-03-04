@@ -83,12 +83,12 @@ export function Progression({runs}: ProgressionProps) {
         }
     };
 
-    const usedRunTypes = Array.from(new Set(runs.map(run => run.type))) ? Array.from(new Set(runs.map(run => run.type))) : [RunType.EASY_RUN]
+    const usedRunTypes = runs && Array.from(new Set(runs.map(run => run.type))) ? Array.from(new Set(runs.map(run => run.type))) : [RunType.EASY_RUN]
 
     const [runType, setRunType] = useState(usedRunTypes[0]);
 
     const { lineRuns, labels, lineData, lineChartData } = useMemo(() => {
-        const filteredRuns = runs.filter(run => run.duration !== null && run.distance !== null && run.type === runType.toString()).reverse()
+        const filteredRuns = runs.filter(run => run.duration !== null && run.distance !== null && run.type === runType).reverse()
         const runLabels = filteredRuns.map(run => formatDate(run.date))
 
         let data: number[] = []
