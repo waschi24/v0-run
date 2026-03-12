@@ -21,14 +21,14 @@ function ProfileCard({ profile, onSelect }: { profile: Profile; onSelect: () => 
       aria-label={`Select profile: ${profile.name}`}
     >
       <div
-        className="relative flex h-28 w-28 items-center justify-center rounded-lg transition-all duration-200 group-hover:scale-110 group-hover:ring-4 group-hover:ring-white/80 group-focus-visible:ring-4 group-focus-visible:ring-white/80 sm:h-36 sm:w-36"
+        className="relative flex h-28 w-28 items-center justify-center rounded-lg transition-all duration-200 group-hover:scale-110 group-hover:ring-4 group-hover:ring-gray-300 group-focus-visible:ring-4 group-focus-visible:ring-gray-300 sm:h-36 sm:w-36"
         style={{ backgroundColor: profile.avatar_color }}
       >
         <span className="text-4xl font-bold text-white sm:text-5xl">
           {getInitials(profile.name)}
         </span>
       </div>
-      <span className="text-base font-medium text-white/70 transition-colors group-hover:text-white sm:text-lg">
+      <span className="text-base font-medium text-gray-700 transition-colors group-hover:text-gray-900 sm:text-lg">
         {profile.name}
       </span>
     </button>
@@ -52,14 +52,14 @@ export default function SelectProfilePage() {
 
   if (loading || selectedProfile) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[oklch(0.10_0.01_240)]">
+      <div className="flex min-h-screen items-center justify-center bg-white">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
       </div>
     )
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[oklch(0.10_0.01_240)] px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-white px-4">
       <div className="mb-12 flex flex-col items-center gap-3">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary">
           <svg
@@ -77,10 +77,10 @@ export default function SelectProfilePage() {
             <path d="M19 4H9.5a4.5 4.5 0 0 0 0 9H13" />
           </svg>
         </div>
-        <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
           Run Tracker
         </h1>
-        <p className="text-base text-white/50">Who is running today?</p>
+        <p className="text-base text-gray-500">Who is running today?</p>
       </div>
 
       <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12">
