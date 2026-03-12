@@ -1,24 +1,27 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useCallback } from "react"
+import { useRouter } from "next/navigation"
 import useSWR from "swr"
 import { createClient } from "@/lib/supabase/client"
+import { useProfile } from "@/lib/profile-context"
 import type { Run } from "@/lib/types"
 import { RunDialog } from "@/components/run-dialog"
 import { RunsTable } from "@/components/runs-table"
 import { exportToMarkdown, downloadMarkdown, exportToCSV, downloadCSV } from "@/lib/export"
 import { Button } from "@/components/ui/button"
-import { Plus, Download } from "lucide-react"
-import {Progression} from "@/components/progression";
+import { Plus, Download, ChevronDown } from "lucide-react"
+import { Progression } from "@/components/progression"
 
-function useRuns() {
+function useRuns(profileId: string | undefined) {
   const supabase = createClient()
   const { data, error, mutate } = useSWR(
-    "runs",
+    profileId ? `runs-${profileId}` : null,
     async () => {
       const { data, error } = await supabase
         .from("runs")
         .select("*")
+        .eq("profile_id", profileId)
         .order("date", { ascending: false })
       if (error) throw error
       return data as Run[]
@@ -27,13 +30,25 @@ function useRuns() {
   return { runs: data ?? [], error, mutate }
 }
 
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2)
+}
+
 export default function DashboardPage() {
-  const { runs, mutate } = useRuns()
-  const [mounted, setMounted] = useState(false)
+  const { selectedProfile, loading: profileLoading, clearProfile } = useProfile()
+  const router = useRouter()
+  const { runs, mutate } = useRuns(selectedProfile?.id)
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    if (!profileLoading && !selectedProfile) {
+      router.replace("/select-profile")
+    }
+  }, [profileLoading, selectedProfile, router])
 
   const handleMdExport = useCallback(() => {
     if (runs.length === 0) return
@@ -49,7 +64,13 @@ export default function DashboardPage() {
     downloadCSV(csv, `runs-${today}.csv`)
   }, [runs])
 
-  if (!mounted) return null
+  if (profileLoading || !selectedProfile) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -76,6 +97,25 @@ export default function DashboardPage() {
               Run Tracker
             </h1>
           </div>
+
+          {/* Profile switcher */}
+          <button
+            onClick={() => {
+              clearProfile()
+              router.push("/select-profile")
+            }}
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            aria-label="Switch profile"
+          >
+            <div
+              className="flex h-7 w-7 items-center justify-center rounded-md text-xs font-bold text-white"
+              style={{ backgroundColor: selectedProfile.avatar_color }}
+            >
+              {getInitials(selectedProfile.name)}
+            </div>
+            <span>{selectedProfile.name}</span>
+            <ChevronDown className="h-3.5 w-3.5 opacity-60" />
+          </button>
         </div>
       </header>
 
@@ -83,7 +123,7 @@ export default function DashboardPage() {
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-2xl font-bold tracking-tight text-foreground">
-              Your Runs
+              {selectedProfile.name}&apos;s Runs
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
               {runs.length} {runs.length === 1 ? "run" : "runs"} logged
@@ -109,6 +149,7 @@ export default function DashboardPage() {
               Export CSV
             </Button>
             <RunDialog
+              profileId={selectedProfile.id}
               onSuccess={() => mutate()}
               trigger={
                 <Button className="gap-2">

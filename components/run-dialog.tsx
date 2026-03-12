@@ -27,11 +27,12 @@ import {Textarea} from "@/components/ui/textarea"
 
 interface RunDialogProps {
     run?: Run
+    profileId?: string
     onSuccess: () => void
     trigger: React.ReactNode
 }
 
-export function RunDialog({run, onSuccess, trigger}: RunDialogProps) {
+export function RunDialog({run, profileId, onSuccess, trigger}: RunDialogProps) {
     const [open, setOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -87,6 +88,7 @@ export function RunDialog({run, onSuccess, trigger}: RunDialogProps) {
             notes: notes || null,
             duration: duration ? parseInt(duration) : null,
             distance: distance ? parseFloat(distance) : null,
+            ...(profileId ? { profile_id: profileId } : {}),
         }
 
         try {
