@@ -31,7 +31,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     supabase
       .from("profiles")
       .select("*")
-      .order("name")
+      .order("created_at", { ascending: true })
       .then(({ data }) => {
         const list = (data as Profile[]) ?? []
         setProfiles(list)
