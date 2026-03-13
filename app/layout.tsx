@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
+import { ProfileProvider } from '@/lib/profile-context'
 import './globals.css'
 
 
@@ -34,7 +35,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-sans antialiased">
-        {children}
+        <ProfileProvider>
+          {children}
+        </ProfileProvider>
         <Analytics />
       </body>
     </html>

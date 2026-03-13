@@ -136,7 +136,7 @@ export function Progression({runs}: ProgressionProps) {
             <p className="text-lg text-gray-600 mt-4">This line diagram shows your pace over time.</p>
             <RadioGroup defaultValue={runType} className="mb-4 flex flex-row gap-4">
                 {usedRunTypes.map((type) => (
-                    <div className="flex items-center space-x-2">
+                    <div key={type} className="flex items-center space-x-2">
                         <RadioGroupItem value={type} id={type} />
                         <Label htmlFor={type}>{type}</Label>
                     </div>
